@@ -3,6 +3,7 @@ package acts
 import (
   "net/http"
   "html/template"
+  "time"
 
   "appengine"
   "appengine/datastore"
@@ -12,6 +13,7 @@ type Act struct {
   Title string
   Description string
   FocusArea string
+  Date time.Time
 }
 
 func init() {
@@ -25,7 +27,7 @@ func actsOfPeaceKey(c appengine.Context) *datastore.Key {
 
 func root(w http.ResponseWriter, r *http.Request) {
   c := appengine.NewContext(r)
-  q := datastore.NewQuery("Act").Ancestor(actsOfPeaceKey(c))
+  q := datastore.NewQuery("Act").Ancestor(actsOfPeaceKey(c)).Order("-Date")
 
   var acts []Act
   if _, err := q.GetAll(c, &acts); err != nil {
@@ -46,6 +48,7 @@ func submit(w http.ResponseWriter, r *http.Request) {
       Title: r.FormValue("title"),
       Description: r.FormValue("description"),
       FocusArea: r.FormValue("focusArea"),
+      Date: time.Now(),
     }
 
     key := datastore.NewIncompleteKey(c, "Act", actsOfPeaceKey(c))
