@@ -38,8 +38,10 @@ func root(w http.ResponseWriter, r *http.Request) {
 }
 
 var actsListTemplate = template.Must(template.New("list").Parse(`
+<!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="/css/styles.css" />
     <title>Acts of Peace</title>
   </head>
   <body>
